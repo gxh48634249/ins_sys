@@ -109,7 +109,7 @@ class RolePermissionRel extends PureComponent {
   showModal = () => {
     const form = this.formRef.props.form;
     form.resetFields();
-    this.setState({ visible: true });
+    this.setState({ visible: true,statue: 'info', });
   }
 
   /* 弹出层隐藏 */
@@ -156,6 +156,7 @@ class RolePermissionRel extends PureComponent {
           onCreate={this.handleCreate}
           treeData={this.props.PermissionEntity.permission}
           modifyData={this.props.PermissionEntity.rolePer}
+          statue={this.state.statue}
         />
         <List
           rowKey="id"
@@ -216,7 +217,7 @@ const CollectionCreateForm = Form.create()(
           sm: { span: 16 },
         },
       };
-      const { visible, onCancel, onCreate, form, treeData, modifyData } = this.props;
+      const { visible, onCancel, onCreate, form, treeData, modifyData, statue } = this.props;
       const { getFieldDecorator } = form;
       const loop = (data) => {
         const child = [];
@@ -249,7 +250,7 @@ const CollectionCreateForm = Form.create()(
             <FormItem label="选择许可" {...formItemLayout}>
               {getFieldDecorator('permissionId', {
                 rules: [{ required: true, message: '请选择许可' }],
-                initialValue: data(modifyData),
+                initialValue: statue==='info'?[]:data(modifyData),
               })(
               <Select
                  mode="multiple"
