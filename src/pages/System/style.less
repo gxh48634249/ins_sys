@@ -1,0 +1,204 @@
+@import '~antd/lib/style/themes/default.less';
+@import '~@/utils/utils.less';
+
+.cardList {
+  margin-bottom: -24px;
+
+  .card {
+    :global {
+      .ant-card-meta-title {
+        margin-bottom: 12px;
+        & > a {
+          color: @heading-color;
+          display: inline-block;
+          max-width: 100%;
+        }
+      }
+      .ant-card-actions {
+        background: #f7f9fa;
+      }
+      .ant-card-body:hover {
+        .ant-card-meta-title > a {
+          color: @info-color;
+        }
+      }
+    }
+  }
+  .item {
+    height: 64px;
+  }
+
+  :global {
+    .ant-list .ant-list-item-content-single {
+      max-width: 100%;
+    }
+  }
+}
+
+.extraImg {
+  margin-top: -60px;
+  text-align: center;
+  width: 195px;
+  img {
+    width: 100%;
+  }
+}
+
+.newButton {
+  background-color: #fff;
+  border-color: @border-color-base;
+  border-radius: @border-radius-sm;
+  color: @text-color-secondary;
+  width: 100%;
+  height: 188px;
+}
+
+.cardAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 48px;
+}
+
+.cardDescription {
+  .textOverflowMulti();
+}
+
+.pageHeaderContent {
+  position: relative;
+}
+
+.contentLink {
+  margin-top: 16px;
+  a {
+    margin-right: 32px;
+    img {
+      width: 24px;
+    }
+  }
+  img {
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+}
+
+@media screen and (max-width: @screen-lg) {
+  .contentLink {
+    a {
+      margin-right: 16px;
+    }
+  }
+}
+@media screen and (max-width: @screen-md) {
+  .extraImg {
+    display: none;
+  }
+}
+
+@media screen and (max-width: @screen-sm) {
+  .pageHeaderContent {
+    padding-bottom: 30px;
+  }
+  .contentLink {
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 1000px;
+    a {
+      margin-right: 16px;
+    }
+    img {
+      margin-right: 4px;
+    }
+  }
+}
+
+.text {
+  font-size: 90%;
+  color: #001529 !important;
+}
+.worningText {
+  font-size: 90%;
+  color: #b40012 !important;
+}
+.infoText {
+  font-size: 90%;
+  color: #00b40c !important;
+}
+.components-table-demo-nested .ant-table-expanded-row > td:last-child {
+  padding: 0 48px 0 8px;
+}
+
+.components-table-demo-nested .ant-table-expanded-row > td:last-child .ant-table-thead th {
+  border-bottom: 1px solid #e9e9e9;
+}
+
+.components-table-demo-nested .ant-table-expanded-row > td:last-child .ant-table-thead th:first-child {
+  padding-left: 0;
+}
+
+.components-table-demo-nested .ant-table-expanded-row > td:last-child .ant-table-row td:first-child {
+  padding-left: 0;
+}
+
+.components-table-demo-nested .ant-table-expanded-row .ant-table-row:last-child td {
+  border: none;
+}
+
+.components-table-demo-nested .ant-table-expanded-row .ant-table-thead > tr > th {
+  background: none;
+}
+
+.components-table-demo-nested .table-operation a:not(:last-child) {
+  margin-right: 24px;
+}
+
+.components-table-demo-nested .ant-table-expanded-row:hover > td {
+  background: #fbfbfb;
+}
+.editable-cell {
+  position: relative;
+}
+
+.editable-cell-value-wrap {
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.editable-row:hover .editable-cell-value-wrap {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 4px 11px;
+}
+.custom-filter-dropdown {
+  padding: 8px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+}
+
+.custom-filter-dropdown input {
+  width: 130px;
+  margin-right: 8px;
+}
+
+.custom-filter-dropdown button {
+  margin-right: 8px;
+}
+
+.highlight {
+  color: #f50;
+}
+.ant-advanced-search-form {
+  padding: 24px;
+  background: #fbfbfb;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+}
+
+.ant-advanced-search-form .ant-form-item {
+  display: flex;
+}
+
+.ant-advanced-search-form .ant-form-item-control-wrapper {
+  flex: 1;
+}
