@@ -84,6 +84,7 @@ export default function request(
     credentials: 'include',
   };
   const newOptions = { ...defaultOptions, ...options };
+  console.log(localStorage.getItem("ens-token"),"获取权限信息 ")
   if (
     newOptions.method === 'POST' ||
     newOptions.method === 'PUT' ||
@@ -94,6 +95,7 @@ export default function request(
         Accept: 'application/json',
         'Content-Type': 'application/json; charset=utf-8',
         ...newOptions.headers,
+        'token':localStorage.getItem("ens-token"),
       };
       newOptions.body = JSON.stringify(newOptions.body);
     } else {
@@ -102,6 +104,7 @@ export default function request(
         Accept: 'application/json',
         'Content-Type': 'application/json; charset=utf-8',
         ...newOptions.headers,
+        'token':localStorage.getItem("ens-token"),
       };
     }
   }
@@ -140,19 +143,20 @@ export default function request(
         window.g_app._store.dispatch({
           type: 'login/logout',
         });
+        router.push("/user/login");
         return;
       }
       // environment should not be used
       if (status === 403) {
-        router.push('/exception/403');
+        router.push("/user/login");
         return;
       }
       if (status <= 504 && status >= 500) {
-        router.push('/exception/500');
+        router.push("/user/login");
         return;
       }
       if (status >= 404 && status < 422) {
-        router.push('/exception/404');
+        router.push("/user/login");
       }
     });
 }

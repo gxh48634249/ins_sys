@@ -25,6 +25,18 @@ export default {
         message.error(response.message);
       }
     },
+    *modifyRole({ payload }, { call, put }) {
+      const response = yield call(modifyRole, payload);
+      if(response.statue===1) {
+        yield put ({
+          type: 'roleModify',
+          payload,
+        })
+        message.success(response.message)
+      }else {
+        message.error(response.message);
+      }
+    },
     *deleteRole({ payload }, { call, put }) {
       const response = yield call(deleteRole, payload);
       if(response.statue===1) {
@@ -118,6 +130,18 @@ export default {
       };
     },
     perSelectByRole(state, { payload }) {
+      return {
+        ...state,
+        rolePer: payload,
+      };
+    },
+    roleModify(state, { payload }) {
+      const entity = payload.roleInfoEntity;
+      const index = state.role.findIndex(item => item.roleId===entity.roleId);
+      let data = state.role[index];
+      data = {...data,roleName:entity.roleName,roleDesc:entity.roleDesc}
+      console.log(data,'jieguo ')
+      state.role.splice(index,1,data);
       return {
         ...state,
         rolePer: payload,

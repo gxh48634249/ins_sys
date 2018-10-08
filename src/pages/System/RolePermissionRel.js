@@ -37,6 +37,7 @@ class RolePermissionRel extends PureComponent {
   state = {
     visible: false,
     statue: 'insert',
+    roleId: '',
   }
 
   componentDidMount() {
@@ -69,7 +70,6 @@ class RolePermissionRel extends PureComponent {
         pid.push(item.split(',')[1]);
       })
     }
-    console.log(pid,'这个是')
     const { dispatch } = this.props;
     dispatch({
       type: 'PermissionEntity/insertRole',
@@ -77,7 +77,7 @@ class RolePermissionRel extends PureComponent {
     });
   }
 
-  /* 修改角色 */
+  /* 激活修改 */
   handleModify = (e) => {
     const { dispatch } = this.props;
     dispatch({
@@ -87,22 +87,38 @@ class RolePermissionRel extends PureComponent {
     const index = this.props.PermissionEntity.role.findIndex(item => item.roleId===e.target.className)
     const form = this.formRef.props.form;
     form.setFieldsValue({...this.props.PermissionEntity.role[index]})
-    this.setState({ visible: true, statue: 'modify', });
+    this.setState({ visible: true, statue: 'modify',roleId:e.target.className});
     console.log(this.props.PermissionEntity.rolePer,'查询结果')
   }
 
+  // /* 激活修改 */
+  // handleSave = (e) => {
+  //   console.log(e,'激活')
+  //   this.setState({ visible: true, statue: 'modify',roleId: e.target.className, });
+  //   const { dispatch } = this.props;
+  //   dispatch({
+  //     type: 'PermissionEntity/selectPerByRole',
+  //     payload: {roleId:e.target.className},
+  //   });
+  //   const index = this.props.PermissionEntity.role.findIndex(item => item.roleId===e.target.className)
+  //   const form = this.formRef.props.form;
+  //   form.setFieldsValue({...this.props.PermissionEntity.role[index]})
+  // }
+
   /* 保存修改 */
-  handleSave = (e) => {
+  saveModify = (e) => {
+    const pid = [];
+    if(e.permissionId&&e.permissionId.length>0) {
+      e.permissionId.forEach(item => {
+        pid.push(item.split(',')[1]);
+      })
+    }
     const { dispatch } = this.props;
     dispatch({
-      type: 'PermissionEntity/selectPerByRole',
-      payload: {roleId:e.target.className},
+      type: 'PermissionEntity/modifyRole',
+      payload: {roleInfoEntity:{...e,roleId:this.state.roleId},permissionId:pid.join(',')},
     });
-    const index = this.props.PermissionEntity.role.findIndex(item => item.roleId===e.target.className)
-    const form = this.formRef.props.form;
-    form.setFieldsValue({...this.props.PermissionEntity.role[index]})
-    this.setState({ visible: true, statue: 'modify', });
-    console.log(this.props.PermissionEntity.rolePer,'查询结果')
+    this.setState({ visible: false, statue: 'info',roleId: '', });
   }
 
   /* 弹出层展示 */
@@ -132,9 +148,13 @@ class RolePermissionRel extends PureComponent {
         return;
       }
       console.log(values);
-      this.handleInsert(values)
+      if (this.state.statue==='info') {
+        this.handleInsert(values)
+      }else {
+        this.saveModify(values)
+      }
       form.resetFields();
-      // this.setState({ visible: false });
+      this.setState({ visible: false });
     });
   }
 
@@ -230,19 +250,18 @@ const CollectionCreateForm = Form.create()(
       }
       const data = (data) => {
         const result = [];
-        if(data) {
+        if(data&&data.length>0) {
           data.forEach(item => {
             result.push(item.permissionName+','+item.permissionId)
           })
         }
-        console.log(result,'解析结果');
         return result;
       }
       return (
         <Modal
           visible={visible}
-          title="新增角色"
-          okText="新增"
+          title={statue==='info'?'新增角色':'修改角色'}
+          okText={statue==='info'?'新增':'修改'}
           onCancel={onCancel}
           onOk={onCreate}
         >
@@ -272,7 +291,7 @@ const CollectionCreateForm = Form.create()(
               {getFieldDecorator('roleCode', {
                 rules: [{ required: true, message: '请填写角色编码' }],
               })(
-                <Input />
+                <Input disabled={statue!=='info'} />
               )}
             </FormItem>
             <FormItem label="角色描述" {...formItemLayout}>

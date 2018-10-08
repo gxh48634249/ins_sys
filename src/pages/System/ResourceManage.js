@@ -260,9 +260,13 @@ class ResourceManage extends React.Component {
           return (
             this.props.ResourceEntity.resourceData.length >= 1
               ? (
-                <Popconfirm title="确认删除?" onConfirm={() => this.handleDelete(record)}>
-                  <a href="javascript:;">删除</a>
-                </Popconfirm>
+                <div>
+                  <Popconfirm title="确认删除?" onConfirm={() => this.handleDelete(record)}>
+                    <a href="javascript:;">删除</a>
+                  </Popconfirm>
+                  <Divider type="vertical" />
+                  <a>编辑权限</a>
+                </div>
               ) : null
           );
         },
