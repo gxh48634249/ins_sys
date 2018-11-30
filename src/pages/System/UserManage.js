@@ -129,7 +129,6 @@ class EditableCell extends React.Component {
 @Form.create()
 class UserManage extends React.Component {
   state = {
-    pagination: this.props.UserEntity.pagination,
     search: true,
     selected: false,
     searchValue: {
@@ -162,8 +161,8 @@ class UserManage extends React.Component {
       type: 'UserEntity/selectUser',
       payload: {
         pageInfo: {
-          pageSize: this.state.pagination.pageSize,
-          pageNum: this.state.pagination.current-1,
+          pageSize: this.props.UserEntity.pagination.pageSize,
+          pageNum: this.props.UserEntity.pagination.current-1,
         }
       },
     });
@@ -282,7 +281,7 @@ class UserManage extends React.Component {
   }
 
   /* 处理搜索 */
-  handleSubmit = () => {
+  handleSubmit = (pagination) => {
     const { form, dispatch } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       this.setState({
@@ -295,8 +294,8 @@ class UserManage extends React.Component {
             ...values,
           },
           pageInfo: {
-            pageSize: this.state.pagination.pageSize,
-            pageNum: this.state.pagination.current-1,
+            pageSize: this.props.UserEntity.pagination.pageSize,
+            pageNum: pagination.current-1,
           }
         },
       })
@@ -505,7 +504,8 @@ class UserManage extends React.Component {
             rowClassName={style['editable-row']}
             dataSource={this.props.UserEntity.data}
             columns={columns}
-            pagination={this.state.pagination}
+            pagination={this.props.UserEntity.pagination}
+            onChange={this.handleSubmit}
             scroll={{ x: 1300 }}
             rowSelection={this.state.selected?rowSelection:null}
           />

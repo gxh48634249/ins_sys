@@ -9,6 +9,7 @@ export default {
     treeData: [],
     dataSource: [],
     pagination: {},
+    organMap: {},
   },
 
   effects: {
@@ -167,7 +168,9 @@ export default {
     },
     init (state, { payload }) {
       const generat = [];
+      const organMap = {};
       payload.forEach((item, index) => {
+        organMap[item.organName] = item.organId;
         if(item.parentCode==='0') {
           generat.push({
             dataRef: {...item},
@@ -207,6 +210,7 @@ export default {
       return{
         ...state,
         treeData: [...generat],
+        organMap
       }
     },
     getUser (state, { payload }) {

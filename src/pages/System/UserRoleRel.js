@@ -17,10 +17,10 @@ const TreeNode = TreeSelect.TreeNode;
 class UserRoleRel extends PureComponent {
 
   state = {
-    mockData: [],
     targetKeys: [],
     expandedKeys: [],
     searchValue: '',
+    organId: [],
     autoExpandParent: true,
     stateInfo: 'info',
     expand: false,
@@ -32,7 +32,6 @@ class UserRoleRel extends PureComponent {
     },
   }
   componentDidMount() {
-    this.getMock();
     this.initTreeData();
   }
 
@@ -110,20 +109,33 @@ class UserRoleRel extends PureComponent {
       this.forceUpdate();
     }
   }
+  /* 机构变化是检索用户 */
+  handleOrganChange = (value) => {
+    let organId = [];
+    value.forEach(item => {
+      organId.push(this.props.OrganEntity.organMap[item]);
+    })
+    this.setState({
+      organId
+    })
+  }
 
   /* 获取用户 */
-  getUser = () => {
-    const { userSearchValue, pagination, organId } = this.state;
+  getUser = (e) => {
+    this.setState({
+      searchValue: e.target.value,
+    });
+    const { pagination, organId } = this.state;
     const { dispatch } = this.props;
     dispatch({
       type: 'OrganEntity/selectUser',
       payload: {
-        userName: userSearchValue,
+        userName: e.target.value,
         pageInfo: {
-          pageSize: pagination.pageSize,
-          pageNum: pagination.current-1,
+          pageSize: 10000,
+          pageNum: 0,
         },
-        organId: organId,
+        organId: organId.join(","),
       },
     }).then(
       this.setState({
@@ -133,61 +145,35 @@ class UserRoleRel extends PureComponent {
 
   }
 
-  getMock = () => {
-    const targetKeys = [];
-    const mockData = [];
-    for (let i = 0; i < 20; i++) {
-      const data = {
-        key: i.toString(),
-        title: `content${i + 1}`,
-        description: `description of content${i + 1}`,
-        chosen: Math.random() * 2 > 1,
-      };
-      if (data.chosen) {
-        targetKeys.push(data.key);
-      }
-      mockData.push(data);
-    }
-    this.setState({ mockData, targetKeys });
-  }
-
-  filterOption = (inputValue, option) => {
-    return option.description.indexOf(inputValue) > -1;
-  }
-
-  handleChange = (targetKeys) => {
-    this.setState({ targetKeys });
-  }
-
   render() {
     const loop = data => data.map((item) => {
       if (item.children) {
         return (
-          <TreeNode value={item.title} title={item.title} key={item.dataRef.organId} >
+          <TreeNode value={item.dataRef.organName} title={item.title} key={item.dataRef.organId} >
             {loop(item.children)}
           </TreeNode>
         );
       }
-      return <TreeNode value={item.title} title={item.title} key={item.dataRef.organId} />;
+      return <TreeNode value={item.dataRef.organName} title={item.title} key={item.dataRef.organId} />;
     });
     const { searchValue, expandedKeys, autoExpandParent } = this.state;
     return (
       <Row>
-        <Col span={6}>
+        <Col span={8}>
           <Card title="用户列表">
             <TreeSelect
               showSearch
-              style={{ width: 300 }}
+              style={{ width: 283 }}
               dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
               placeholder="请选择机构"
               allowClear
-              setFieldsValue={this.state.value}
+              onChange={this.handleOrganChange}
               treeDefaultExpandAll
               multiple
             >
               {loop((this.props.OrganEntity.treeData&&this.props.OrganEntity.treeData.length>0)?this.props.OrganEntity.treeData:[])}
             </TreeSelect>
-            <Search style={{ width: 300 }} style={{ marginBottom: 8 }} placeholder="查询机构" onChange={this.onChange} />
+            <Search style={{ width: 300 }} style={{ marginBottom: 8 }} placeholder="用户名称/联系方式" onChange={this.onChange} onPressEnter={this.getUser} />
           </Card>
         </Col>
         <Col span={12}>
