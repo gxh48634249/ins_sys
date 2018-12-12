@@ -15,9 +15,13 @@ export default {
 
   effects: {
     *delete({ payload }, { call, put }) {
-      const respons = yield call(deleteLibrary, {libraryCode: payload});
+      const response = yield call(deleteLibrary, {libraryCode: payload});
       if(response.statue===1) {
         message.success(response.message)
+        yield put({
+          type: 'handleDelete',
+          payload,
+        });
       }else {
         message.error(response.message)
       }
@@ -28,7 +32,6 @@ export default {
         type: 'addChild',
         payload:{
           child: respons.data,
-          treeNode: payload.treeNode
         },
       });
     },
@@ -51,24 +54,26 @@ export default {
       }
     },
     *edit({ payload },{ call, put }) {
-      const respons = yield call(modifyLibrary, payload);
-      yield put({
-        type: 'handleEdit',
-        payload: {
-          data: payload.libraryName,
-        },
-      });
+      const response = yield call(modifyLibrary, payload);
+      if(response.statue===1) {
+        yield put({
+          type: 'handleEdit',
+          payload,
+        });
+      }else {
+        message.error(response.message)
+      }
     },
     *add({ payload },{ call, put }) {
       const response = yield call(insertLibrary, payload);
-      yield put({
-        type: 'handleAdd',
-        payload: {
-          data: response.data,
-        },
-      });
       if(response.statue===1) {
         message.success(response.message)
+        yield put({
+          type: 'handleAdd',
+          payload: {
+            data: response.data,
+          },
+        });
       }else {
         message.error(response.message)
       }
@@ -95,14 +100,12 @@ export default {
       }
     },
     addChild (state, { payload }) {
-      const child = [];
       if(payload.child) {
         payload.child.map(item => {
-          const entity = { title: item.libraryName, key: item.libraryCode };
-          child.push(entity);
+          const entity = { title: item.libraryName, key: item.libraryCode ,parentCode: item.parentCode};
+          state.treeData.push(entity);
         });
       }
-      payload.treeNode.props.dataRef.children = child;
       return{
         ...state,
       }
@@ -111,7 +114,7 @@ export default {
       const treeData = [];
       if(payload.data) {
         payload.data.map(item => {
-          const entity = { title: item.libraryName, key: item.libraryCode };
+          const entity = { title: item.libraryName, key: item.libraryCode, parentCode: item.parentCode };
           treeData.push(entity)
         })
       }
@@ -121,35 +124,27 @@ export default {
       }
     },
     handleEdit (state, { payload }) {
-      state.treeNode.props.dataRef.title = payload.data;
+      const entity = { title: payload.libraryName, key: payload.libraryCode ,parentCode: payload.parentCode};
+      const index = state.treeData.findIndex(item => item.key===payload.libraryCode)
+      if (index>-1) {
+        state.treeData.splice(index,1,entity)
+      }
       return{
         ...state,
       }
     },
     handleAdd (state, { payload }) {
-      const entity = { title: payload.data.libraryName, key: payload.data.libraryCode };
-      if (state.treeNode&&state.treeNode.props) {
-        state.treeNode.props.dataRef.children.push(entity);
-      }else {
-        state.treeData.push(entity);
-      }
+      console.log(payload, '====新增数据')
+      const entity = { title: payload.data.libraryName, key: payload.data.libraryCode, parentCode: payload.data.parentCode };
+      state.treeData.push(entity);
+      console.log(state.treeData, '=====treedata')
+      // if (payload.data.parentCode !== '0') {
+      //   state.treeNode.props.dataRef.children.push(entity);
+      // }else {
+      //   state.treeData.push(entity);
+      // }
       return{
         ...state
-      }
-    },
-    handleSelect (state, { payload }) {
-      console.log(payload,'C')
-      if(payload.info.selected) {
-        return {
-          ...state,
-          treeNode: payload.info.node,
-          selectKey: payload.selectedKeys[0],
-        }
-      }
-      return {
-        ...state,
-        treeNode: {},
-        selectKey: '',
       }
     },
     onExpand (state, { payload }) {
@@ -157,6 +152,16 @@ export default {
         ...state,
         expandedKeys: payload.expandedKeys,
         autoExpandParent: true,
+      }
+    },
+    handleDelete (state, { payload }) {
+      const temp = state.treeData.filter(item => {
+        return item.key !== payload
+      });
+      console.log(temp, '======temp')
+      return {
+        ...state,
+        treeData: temp,
       }
     }
   },

@@ -12,7 +12,7 @@ export default {
     rules: [
       {
         required: true,
-        message: 'Please enter username!',
+        message: '请输入登陆账户!',
       },
     ],
   },
@@ -26,7 +26,7 @@ export default {
     rules: [
       {
         required: true,
-        message: 'Please enter password!',
+        message: '请输入登陆密码!',
       },
     ],
   },
@@ -39,11 +39,11 @@ export default {
     rules: [
       {
         required: true,
-        message: 'Please enter mobile number!',
+        message: '请输入登陆手机号!',
       },
       {
         pattern: /^1\d{10}$/,
-        message: 'Wrong mobile number format!',
+        message: '手机号码格式错误!',
       },
     ],
   },
@@ -56,7 +56,7 @@ export default {
     rules: [
       {
         required: true,
-        message: 'Please enter Captcha!',
+        message: '请输入验证码!',
       },
     ],
   },

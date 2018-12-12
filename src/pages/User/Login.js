@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import { Checkbox, Alert, Icon } from 'antd';
+import { Checkbox, Alert, Icon, Divider } from 'antd';
 import Login from '@/components/Login';
 import styles from './Login.less';
 
@@ -79,15 +79,15 @@ class LoginPage extends Component {
             {login.status === 'error' &&
               login.type === 'account' &&
               !submitting &&
-              this.renderMessage('账户或密码错误（admin/888888）')}
-            <UserName name="username" placeholder="admin/user" />
+              this.renderMessage('请输入登陆账户')}
+            <UserName name="username" placeholder="请输入注册账号" />
             <Password
               name="password"
-              placeholder="888888/123456"
+              placeholder="请输入登陆密码"
               onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
             />
           </Tab>
-          <Tab key="mobile" tab="手机号登录">
+          <Tab key="mobile" tab="手机号登录" disabled>
             {login.status === 'error' &&
               login.type === 'mobile' &&
               !submitting &&
@@ -100,19 +100,23 @@ class LoginPage extends Component {
               自动登录
             </Checkbox>
             <a style={{ float: 'right' }} href="">
+              注册账户
+            </a>
+            <Divider type="vertical" style={{float: 'right', paddingTop: '20px'}}/>
+            <a style={{ float: 'right' }} href="">
               忘记密码
             </a>
           </div>
           <Submit loading={submitting}>登录</Submit>
-          <div className={styles.other}>
-            其他登录方式
-            <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
-            <Icon type="taobao-circle" className={styles.icon} theme="outlined" />
-            <Icon type="weibo-circle" className={styles.icon} theme="outlined" />
-            <Link className={styles.register} to="/User/Register">
-              注册账户
-            </Link>
-          </div>
+          {/*<div className={styles.other}>*/}
+            {/*其他登录方式:*/}
+            {/*<Icon type="alipay-circle" className={styles.icon} theme="outlined" disabled/>*/}
+            {/*<Icon type="taobao-circle" className={styles.icon} theme="outlined" />*/}
+            {/*<Icon type="weibo-circle" className={styles.icon} theme="outlined" />*/}
+            {/*<Link className={styles.register} to="/User/Register">*/}
+              {/*注册账户*/}
+            {/*</Link>*/}
+          {/*</div>*/}
         </Login>
       </div>
     );
